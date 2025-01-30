@@ -14,3 +14,6 @@
 [+] - Created a custom exceptions directory within src  
 &nbsp;&nbsp;&nbsp;&nbsp; - Added custom exceptions for application handler interface  
 &nbsp;&nbsp;&nbsp;&nbsp; - Basic implementation of the application handler interface  
+
+*Tim 30/1/25*  
+[+] - Created starting implementations for server and handler files
