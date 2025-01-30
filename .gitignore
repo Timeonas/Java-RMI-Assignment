@@ -1,2 +1,4 @@
 .idea/
 Samples/**/*.class
+src/**/*.class
+src/**/*.txt
