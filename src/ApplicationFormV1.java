@@ -4,40 +4,65 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class ApplicationFormV1 extends UnicastRemoteObject implements ApplicationForm {
-    // Store questions and answers
-    private final String[] questions;    // Array of 5 required questions
-    private final Map<Integer, String> answers;   // Store answers
+    private static final long serialVersionUID = 1L;
     
-    // Constructor
+    // Store questions and answers
+    private final String[] questions = {
+        "Please enter your full name:",
+        "Please enter your address:",
+        "Please enter your email:",
+        "Please enter your contact number:",
+        "Please provide a personal statement (including qualifications and additional details):"
+    };
+    
+    private final Map<Integer, String> answers;
+    
     public ApplicationFormV1() throws RemoteException {
-        // Initialize answers map
+        super();
+        answers = new HashMap<>();
     }
     
-    // Interface methods
     @Override
     public String getFormInfo() throws RemoteException {
-        // Return form description
+        return "University Course Application Form V1 - Basic Information Collection";
     }
     
     @Override
     public int getTotalQuestions() throws RemoteException {
-        // Return questions.length
+        return questions.length;
     }
     
     @Override
     public String getQuestion(int questionNumber) throws RemoteException {
-        // Return specific question
+        if (questionNumber < 0 || questionNumber >= questions.length) {
+            throw new RemoteException("Invalid question number: " + questionNumber);
+        }
+        return questions[questionNumber];
     }
     
     @Override
     public void answerQuestion(int questionNumber, String answer) throws RemoteException {
-        // Store answer for question
+        if (questionNumber < 0 || questionNumber >= questions.length) {
+            throw new RemoteException("Invalid question number: " + questionNumber);
+        }
+        if (answer == null || answer.trim().isEmpty()) {
+            throw new RemoteException("Answer cannot be empty");
+        }
+        answers.put(questionNumber, answer.trim());
     }
     
-    @Override 
+    @Override
     public String toString() {
-        // Format all questions and answers for saving to file
+        StringBuilder sb = new StringBuilder();
+        sb.append("Application Form Submission\n");
+        sb.append("-------------------------\n");
+        
+        for (int i = 0; i < questions.length; i++) {
+            sb.append(questions[i]).append("\n");
+            sb.append("Answer: ").append(answers.getOrDefault(i, "Not answered")).append("\n\n");
+        }
+        
+        return sb.toString();
     }
 }

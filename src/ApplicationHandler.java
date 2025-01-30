@@ -1,3 +1,4 @@
+package src;
 import exceptions.InvalidCredentialsException;
 import exceptions.InvalidFormException;
 import exceptions.InvalidSessionException;
