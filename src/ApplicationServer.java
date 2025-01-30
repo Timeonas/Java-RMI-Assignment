@@ -1,6 +1,5 @@
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-
 public class ApplicationServer {
     private static final int RMI_PORT = 1099;
     //Name to for RMI registry
