@@ -1,0 +1,1 @@
+java -cp %~dp0compute.jar;. client.ComputePi 20345 45
