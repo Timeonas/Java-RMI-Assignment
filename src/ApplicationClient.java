@@ -22,28 +22,29 @@ public class ApplicationClient {
             Registry registry = LocateRegistry.getRegistry(HOST, PORT);
             System.out.println("Connected to RMI registry");
             
-            // Look up the remote object
-            ApplicationHandler handler = 
-                (ApplicationHandler) registry.lookup(REMOTE_OBJECT_NAME);
+            //Look up the remote object
+            ApplicationHandler handler = (ApplicationHandler) registry.lookup(REMOTE_OBJECT_NAME);
             System.out.println("Found remote ApplicationHandler object");
             
             // Step 1: Login
             long sessionId;
-            try {
+            try 
+            {
                 sessionId = handler.login(USERNAME, PASSWORD);
                 System.out.println("Login successful. Session ID: " + sessionId);
             } catch (InvalidCredentialsException e) {
                 System.err.println("Login failed: " + e.getMessage());
                 return;
             }
-            
             // Step 2: Download application form
             ApplicationForm form;
             try {
+
                 form = handler.downloadApplicationForm(sessionId);
                 System.out.println("Application form downloaded successfully");
                 System.out.println(form.getFormInfo());
-            } catch (InvalidSessionException e) {
+            } 
+            catch (InvalidSessionException e) {
                 System.err.println("Failed to download form: " + e.getMessage());
                 return;
             }
@@ -57,12 +58,15 @@ public class ApplicationClient {
                 return;
             }
             
-            // Step 4: Submit the completed form
+            // Step 4:Submit the competed form
             try {
+                
                 handler.submitApplicationForm(sessionId, form);
                 System.out.println("Application form submitted successfully");
             } catch (InvalidSessionException | InvalidFormException e) {
                 System.err.println("Failed to submit form: " + e.getMessage());
+
+
             }
             
         } catch (Exception e) {
@@ -70,16 +74,15 @@ public class ApplicationClient {
             e.printStackTrace();
         }
     }
-    
     private static void completeApplicationForm(ApplicationForm form) 
             throws RemoteException, InvalidQuestionNumber, EmptyAnswerException {
         // Sample answers for testing
         String[] sampleAnswers = {
-            "John Doe",                  // Name
-            "123 University Avenue",     // Address
-            "john.doe@email.com",        // Email
-            "555-0123",                 // Contact number
-            "I am a dedicated student with excellent academic records..." // Statement
+            "John Doe",                 
+            "123 University Avenue",     
+            "john.doe@email.com",       
+            "555-0123",                 
+            "I am a dedicated student with excellent academic records..."
         };
         
         int totalQuestions = form.getTotalQuestions();
