@@ -1,16 +1,15 @@
 
 import java.rmi.RemoteException;
+import exceptions.EmptyAnswerException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+
+
 import java.util.Map;
 
-import exceptions.EmptyAnswerException;
 import exceptions.InvalidQuestionNumber;
-
 public class ApplicationFormV1 extends UnicastRemoteObject implements ApplicationForm {
     private static final long serialVersionUID = 1L;
-    
-    // Store questions and answers
     private final String[] questions = {
         "Please enter your full name:",
         "Please enter your address:",
@@ -32,7 +31,8 @@ public class ApplicationFormV1 extends UnicastRemoteObject implements Applicatio
     }
     
     @Override
-    public int getTotalQuestions() throws RemoteException {
+    public int getTotalQuestions() 
+    throws RemoteException {
         return questions.length;
     }
     
@@ -54,7 +54,6 @@ public class ApplicationFormV1 extends UnicastRemoteObject implements Applicatio
         }
         answers.put(questionNumber, answer.trim());
     }
-
     @Override
     public String getFirstName() throws RemoteException {
         String fullName = answers.get(0);  // First question is full name
@@ -62,33 +61,30 @@ public class ApplicationFormV1 extends UnicastRemoteObject implements Applicatio
             throw new RemoteException("Name has not been provided");
         }
         String[] nameParts = fullName.trim().split("\\s+");
-        return nameParts[0];  // First part is first name
+        return nameParts[0];  
     }
 
     @Override
     public String getLastName() throws RemoteException {
-        String fullName = answers.get(0);  // First question is full name
+        String fullName = answers.get(0); 
         if (fullName == null || fullName.trim().isEmpty()) {
-            throw new RemoteException("Name has not been provided");
+            throw new RemoteException("Name has not beenprovided");
         }
         String[] nameParts = fullName.trim().split("\\s+");
         if (nameParts.length < 2) {
             throw new RemoteException("Full name must include last name");
         }
-        return nameParts[nameParts.length - 1];  // Last part is last name
+        return nameParts[nameParts.length - 1]; 
     }
-    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Application Form Submission\n");
         sb.append("-------------------------\n");
-        
         for (int i = 0; i < questions.length; i++) {
             sb.append(questions[i]).append("\n");
             sb.append("Answer: ").append(answers.getOrDefault(i, "Not answered")).append("\n\n");
         }
-        
         return sb.toString();
     }
 }
