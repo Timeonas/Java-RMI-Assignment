@@ -54,6 +54,29 @@ public class ApplicationFormV1 extends UnicastRemoteObject implements Applicatio
         }
         answers.put(questionNumber, answer.trim());
     }
+
+    @Override
+    public String getFirstName() throws RemoteException {
+        String fullName = answers.get(0);  // First question is full name
+        if (fullName == null || fullName.trim().isEmpty()) {
+            throw new RemoteException("Name has not been provided");
+        }
+        String[] nameParts = fullName.trim().split("\\s+");
+        return nameParts[0];  // First part is first name
+    }
+
+    @Override
+    public String getLastName() throws RemoteException {
+        String fullName = answers.get(0);  // First question is full name
+        if (fullName == null || fullName.trim().isEmpty()) {
+            throw new RemoteException("Name has not been provided");
+        }
+        String[] nameParts = fullName.trim().split("\\s+");
+        if (nameParts.length < 2) {
+            throw new RemoteException("Full name must include last name");
+        }
+        return nameParts[nameParts.length - 1];  // Last part is last name
+    }
     
     @Override
     public String toString() {
