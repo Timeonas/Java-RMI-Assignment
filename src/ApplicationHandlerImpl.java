@@ -1,13 +1,16 @@
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import exceptions.InvalidCredentialsException;
-import exceptions.InvalidSessionException;
-import exceptions.InvalidFormException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.io.FileWriter;
+import exceptions.InvalidSessionException;
+
+
+import exceptions.InvalidFormException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
+
 
 public class ApplicationHandlerImpl extends UnicastRemoteObject implements ApplicationHandler {
     private static final String VALID_USERNAME = "admin";
@@ -16,7 +19,7 @@ public class ApplicationHandlerImpl extends UnicastRemoteObject implements Appli
     // Store active sessions with their creation timestamp
     private final Map<Long, Long> activeSessions = new HashMap<>();
     private final AtomicLong sessionIdGenerator = new AtomicLong(0);
-    private static final long SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes in milliseconds
+    private static final long SESSION_TIMEOUT = 30 * 60 * 1000; //30 minutes in milliseconds
 
     public ApplicationHandlerImpl() throws RemoteException {
         super();
@@ -33,15 +36,13 @@ public class ApplicationHandlerImpl extends UnicastRemoteObject implements Appli
     }
 
     @Override
-    public ApplicationForm downloadApplicationForm(long sessionId)
-            throws RemoteException, InvalidSessionException {
+    public ApplicationForm downloadApplicationForm(long sessionId) throws RemoteException, InvalidSessionException {
         validateSession(sessionId);
         return new ApplicationFormV1();
     }
-
     @Override
     public void submitApplicationForm(long sessionId, ApplicationForm form)
-            throws RemoteException, InvalidSessionException, InvalidFormException {
+    throws RemoteException, InvalidSessionException, InvalidFormException {
         validateSession(sessionId);
 
         if (form == null) {
@@ -50,18 +51,20 @@ public class ApplicationHandlerImpl extends UnicastRemoteObject implements Appli
 
         try {
             String fileName = form.getFirstName() + "_" + form.getLastName() + "_application.txt";
-            // Sanitize filename to remove invalid characters
+            //Sanitize filename to remove invalid characters
             fileName = fileName.replaceAll("[^a-zA-Z0-9._-]", "_");
 
-            try (FileWriter writer = new FileWriter(fileName)) {
-                writer.write(form.toString());
-            }
+            FileWriter writer = new FileWriter(fileName);
+            writer.write(form.toString());
+            writer.close();
+        
         } catch (IOException e) {
             throw new RemoteException("Failed to save application form", e);
         }
     }
 
-    private void validateSession(long sessionId) throws InvalidSessionException {
+    private void validateSession(long sessionId) throws InvalidSessionException
+     {
         Long sessionCreationTime = activeSessions.get(sessionId);
         if (sessionCreationTime == null) {
             throw new InvalidSessionException("Invalid session ID");
@@ -73,15 +76,13 @@ public class ApplicationHandlerImpl extends UnicastRemoteObject implements Appli
             throw new InvalidSessionException("Session has expired");
         }
 
-        // Update session timestamp
+        // Update session timestmp
         activeSessions.put(sessionId, System.currentTimeMillis());
     }
 
-    // Cleanup method to remove expired sessions (could be called periodically)
+    //Cleanup method to remove expired sessions (could be called periodically
     public void cleanupExpiredSessions() {
         long currentTime = System.currentTimeMillis();
-        activeSessions.entrySet().removeIf(
-                entry -> (currentTime - entry.getValue() > SESSION_TIMEOUT)
-        );
+        activeSessions.entrySet().removeIf(entry -> (currentTime - entry.getValue() > SESSION_TIMEOUT));
     }
 }
