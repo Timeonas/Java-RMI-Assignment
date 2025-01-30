@@ -22,4 +22,7 @@ public interface ApplicationForm extends Remote {
     
     // answer specific quesiton in form
     void answerQuestion(int questionNumber, String answer) throws RemoteException, InvalidQuestionNumber, EmptyAnswerException;
+
+    String getLastName() throws RemoteException;
+    String getFirstName() throws RemoteException;
 }
