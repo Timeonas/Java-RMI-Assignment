@@ -1,8 +1,11 @@
-package src;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
+
+import exceptions.EmptyAnswerException;
+import exceptions.InvalidQuestionNumber;
 
 public class ApplicationFormV1 extends UnicastRemoteObject implements ApplicationForm {
     private static final long serialVersionUID = 1L;
@@ -42,12 +45,12 @@ public class ApplicationFormV1 extends UnicastRemoteObject implements Applicatio
     }
     
     @Override
-    public void answerQuestion(int questionNumber, String answer) throws RemoteException {
+    public void answerQuestion(int questionNumber, String answer) throws RemoteException, InvalidQuestionNumber, EmptyAnswerException {
         if (questionNumber < 0 || questionNumber >= questions.length) {
-            throw new RemoteException("Invalid question number: " + questionNumber);
+            throw new InvalidQuestionNumber("Invalid question number: " + questionNumber);
         }
         if (answer == null || answer.trim().isEmpty()) {
-            throw new RemoteException("Answer cannot be empty");
+            throw new EmptyAnswerException("Answer cannot be empty");
         }
         answers.put(questionNumber, answer.trim());
     }

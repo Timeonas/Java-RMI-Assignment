@@ -1,6 +1,9 @@
-package src;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+
+import exceptions.EmptyAnswerException;
+import exceptions.InvalidQuestionNumber;
 
 public interface ApplicationForm extends Remote {
  
@@ -18,5 +21,5 @@ public interface ApplicationForm extends Remote {
     String getQuestion(int questionNumber) throws RemoteException;
     
     // answer specific quesiton in form
-    void answerQuestion(int questionNumber, String answer) throws RemoteException;
+    void answerQuestion(int questionNumber, String answer) throws RemoteException, InvalidQuestionNumber, EmptyAnswerException;
 }
