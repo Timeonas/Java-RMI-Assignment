@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 
 public class ApplicationClient {
     private static final String HOST = "localhost";
-    private static final int PORT = 1099;
+    private static final int PORT = 20345;
     private static final String REMOTE_OBJECT_NAME = "ApplicationHandler";
     
     //Credentials for server login
