@@ -11,14 +11,19 @@ import exceptions.InvalidFormException;
 import java.io.IOException;
 import java.util.HashMap;
 
-
+//Class implements of the ApplicationHandler interface
 public class ApplicationHandlerImpl extends UnicastRemoteObject implements ApplicationHandler {
+
+    //Valid username and password hardcoded into the server
     private static final String VALID_USERNAME = "admin";
     private static final String VALID_PASSWORD = "password123";
 
+    //Map of active sessions, maps session ID to the time it was created
     private final Map<Long, Long> activeSessions = new HashMap<>();
+    //AtomicLong to generate unique session IDs, starting from 1
     private final AtomicLong sessionIdGenerator = new AtomicLong(0);
-    private static final long SESSION_TIMEOUT = 30 * 60 * 1000; //30 minutes in milliseconds
+    //Session timeout in milliseconds (5 minutes)
+    private static final long sessionTimeout = 5 * 60 * 1000;
 
     public ApplicationHandlerImpl() throws RemoteException {
         super();
@@ -27,7 +32,9 @@ public class ApplicationHandlerImpl extends UnicastRemoteObject implements Appli
     @Override
     public long login(String username, String password) throws RemoteException, InvalidCredentialsException {
         if (VALID_USERNAME.equals(username) && VALID_PASSWORD.equals(password)) {
+            //Generate a new session ID and assign it to sessionId
             long sessionId = sessionIdGenerator.incrementAndGet();
+            //Add the session ID to the activeSessions map with the current time
             activeSessions.put(sessionId, System.currentTimeMillis());
             return sessionId;
         }
@@ -36,6 +43,7 @@ public class ApplicationHandlerImpl extends UnicastRemoteObject implements Appli
 
     @Override
     public ApplicationForm downloadApplicationForm(long sessionId) throws RemoteException, InvalidSessionException {
+        //Validate the session before proceeding
         validateSession(sessionId);
         return new ApplicationFormV1();
     }
@@ -49,11 +57,12 @@ public class ApplicationHandlerImpl extends UnicastRemoteObject implements Appli
         }
 
         try {
+            //Generate a file name based on the applicant's first and last name
             String fileName = form.getFirstName() + "_" + form.getLastName() + "_application.txt";
-            //Sanitize filename to remove invalid characters
             fileName = fileName.replaceAll("[^a-zA-Z0-9._-]", "_");
 
             FileWriter writer = new FileWriter(fileName);
+            //Calling the form's toString method to get the form data into the text file
             writer.write(form.toString());
             writer.close();
         
@@ -70,12 +79,9 @@ public class ApplicationHandlerImpl extends UnicastRemoteObject implements Appli
         }
 
         //Check if session has expired
-        if (System.currentTimeMillis() - sessionCreationTime > SESSION_TIMEOUT) {
+        if (System.currentTimeMillis() - sessionCreationTime > sessionTimeout) {
             activeSessions.remove(sessionId);
             throw new InvalidSessionException("Session has expired");
         }
-
-        //Update session timestmp
-        activeSessions.put(sessionId, System.currentTimeMillis());
     }
 }

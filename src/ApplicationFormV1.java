@@ -2,22 +2,24 @@
 import java.rmi.RemoteException;
 import exceptions.EmptyAnswerException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
-
-
-import java.util.Map;
+import java.util.*;
 
 import exceptions.InvalidQuestionNumber;
+
+//Class implements ApplicationForm interface
 public class ApplicationFormV1 extends UnicastRemoteObject implements ApplicationForm {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 227L;
+
+    //Questions in the application form
     private final String[] questions = {
         "Please enter your full name:",
         "Please enter your address:",
         "Please enter your email:",
         "Please enter your contact number:",
-        "Please provide a personal statement (including qualifications and additional details):"
+        "Please provide a personal statement:"
     };
-    
+
+    //Map of question number and the answer
     private final Map<Integer, String> answers;
     
     public ApplicationFormV1() throws RemoteException {
@@ -27,7 +29,7 @@ public class ApplicationFormV1 extends UnicastRemoteObject implements Applicatio
     
     @Override
     public String getFormInfo() throws RemoteException {
-        return "University Course Application Form V1 - Basic Information Collection";
+        return "College Course Application Form";
     }
     
     @Override
@@ -56,7 +58,7 @@ public class ApplicationFormV1 extends UnicastRemoteObject implements Applicatio
     }
     @Override
     public String getFirstName() throws RemoteException {
-        String fullName = answers.get(0);  // First question is full name
+        String fullName = answers.get(0);  //First question is full name
         if (fullName == null || fullName.trim().isEmpty()) {
             throw new RemoteException("Name has not been provided");
         }

@@ -8,29 +8,26 @@ import java.rmi.registry.Registry;
 import java.rmi.RemoteException;
 
 public class ApplicationClient {
-    private static final String HOST = "localhost";
-    private static final int PORT = 20345;
-    private static final String REMOTE_OBJECT_NAME = "ApplicationHandler";
-    
-    //Credentials for server login
-    private static final String USERNAME = "admin";
-    private static final String PASSWORD = "password123";
-    
     public static void main(String[] args) {
         try {
+            int port = 20345;
             //Get reference to RMI registry
-            Registry registry = LocateRegistry.getRegistry(HOST, PORT);
+            Registry registry = LocateRegistry.getRegistry(port);
             System.out.println("Connected to RMI registry");
-            
+
+            String name = "ApplicationHandler";
             //Look up the remote object
-            ApplicationHandler handler = (ApplicationHandler) registry.lookup(REMOTE_OBJECT_NAME);
+            ApplicationHandler handler = (ApplicationHandler) registry.lookup(name);
             System.out.println("Found remote ApplicationHandler object");
             
             //Login
             long sessionId;
             try 
             {
-                sessionId = handler.login(USERNAME, PASSWORD);
+                //Credentials for server login
+                String username = "admin";
+                String password = "password123";
+                sessionId = handler.login(username, password);
                 System.out.println("Login successful. Session ID: " + sessionId);
             } catch (InvalidCredentialsException e) {
                 System.err.println("Login failed: " + e.getMessage());
