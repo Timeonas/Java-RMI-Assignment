@@ -8,7 +8,7 @@ import exceptions.InvalidQuestionNumber;
 public interface ApplicationForm extends Remote {
  
  
-    // return String containing general form information
+    //return String containing general form information
   
     String getFormInfo() throws RemoteException;
     
@@ -20,7 +20,7 @@ public interface ApplicationForm extends Remote {
     //return String containing the question at the specified index
     String getQuestion(int questionNumber) throws RemoteException;
     
-    // answer specific quesiton in form
+    //answer specific quesiton in form
     void answerQuestion(int questionNumber, String answer) throws RemoteException, InvalidQuestionNumber, EmptyAnswerException;
 
     String getLastName() throws RemoteException;

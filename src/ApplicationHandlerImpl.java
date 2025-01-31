@@ -16,7 +16,6 @@ public class ApplicationHandlerImpl extends UnicastRemoteObject implements Appli
     private static final String VALID_USERNAME = "admin";
     private static final String VALID_PASSWORD = "password123";
 
-    // Store active sessions with their creation timestamp
     private final Map<Long, Long> activeSessions = new HashMap<>();
     private final AtomicLong sessionIdGenerator = new AtomicLong(0);
     private static final long SESSION_TIMEOUT = 30 * 60 * 1000; //30 minutes in milliseconds
@@ -70,19 +69,13 @@ public class ApplicationHandlerImpl extends UnicastRemoteObject implements Appli
             throw new InvalidSessionException("Invalid session ID");
         }
 
-        // Check if session has expired
+        //Check if session has expired
         if (System.currentTimeMillis() - sessionCreationTime > SESSION_TIMEOUT) {
             activeSessions.remove(sessionId);
             throw new InvalidSessionException("Session has expired");
         }
 
-        // Update session timestmp
+        //Update session timestmp
         activeSessions.put(sessionId, System.currentTimeMillis());
-    }
-
-    //Cleanup method to remove expired sessions (could be called periodically
-    public void cleanupExpiredSessions() {
-        long currentTime = System.currentTimeMillis();
-        activeSessions.entrySet().removeIf(entry -> (currentTime - entry.getValue() > SESSION_TIMEOUT));
     }
 }
