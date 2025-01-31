@@ -49,7 +49,7 @@ public class ApplicationHandlerImpl extends UnicastRemoteObject implements Appli
     }
     @Override
     public void submitApplicationForm(long sessionId, ApplicationForm form)
-    throws RemoteException, InvalidSessionException, InvalidFormException {
+            throws RemoteException, InvalidSessionException, InvalidFormException {
         validateSession(sessionId);
 
         if (form == null) {
@@ -57,15 +57,13 @@ public class ApplicationHandlerImpl extends UnicastRemoteObject implements Appli
         }
 
         try {
-            //Generate a file name based on the applicant's first and last name
             String fileName = form.getFirstName() + "_" + form.getLastName() + "_application.txt";
             fileName = fileName.replaceAll("[^a-zA-Z0-9._-]", "_");
 
             FileWriter writer = new FileWriter(fileName);
-            //Calling the form's toString method to get the form data into the text file
-            writer.write(form.toString());
+            writer.write(form.getFormContents());
             writer.close();
-        
+
         } catch (IOException e) {
             throw new RemoteException("Failed to save application form", e);
         }

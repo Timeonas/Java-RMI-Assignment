@@ -21,7 +21,8 @@ public interface ApplicationForm extends Remote {
     //Method to answer question based on question number
     void answerQuestion(int questionNumber, String answer) throws RemoteException, InvalidQuestionNumber, EmptyAnswerException;
 
-    //??
     String getLastName() throws RemoteException;
     String getFirstName() throws RemoteException;
+
+    String getFormContents() throws RemoteException;
 }

@@ -78,8 +78,9 @@ public class ApplicationFormV1 extends UnicastRemoteObject implements Applicatio
         }
         return nameParts[nameParts.length - 1]; 
     }
+
     @Override
-    public String toString() {
+    public String getFormContents() throws RemoteException {
         StringBuilder sb = new StringBuilder();
         sb.append("Application Form Submission\n");
         sb.append("-------------------------\n");
