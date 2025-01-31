@@ -23,3 +23,6 @@
 
 *Tim 30/1/25*  
 [*] - Added more gitignore statements for .class files and .txt files
+
+*Alasdair 30/1/25*  
+[*] - Cleanup of code and added comments

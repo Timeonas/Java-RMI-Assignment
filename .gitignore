@@ -2,3 +2,4 @@
 Samples/**/*.class
 src/**/*.class
 src/**/*.txt
+*.iml
